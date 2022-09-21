@@ -1,4 +1,9 @@
 build/
 dist/
+__pycache__/
 *.spec
+
 gui_yunxiao
+yunxiao
+gui_yunxiao.exe
+yunxiao.exe
