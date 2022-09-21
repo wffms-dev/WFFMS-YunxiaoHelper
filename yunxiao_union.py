@@ -1,13 +1,14 @@
 # -*- coding: UTF-8 -*-
+#
+# yunxiao_union.py
+#
 import time
 import requests
-from bs4 import BeautifulSoup
 from lxml import etree
 from requests.cookies import RequestsCookieJar as CJar
 import json as J
-import sys
 
-# TODO: merge 2 files into 1 file
+# DONE: merge 2 files into 1 file
 class YunXiaoHelper(object):
     session=requests.session()
     username = ""
@@ -146,3 +147,24 @@ class YunXiaoHelper(object):
                 return jo,restext[jo["Result"]]
         else:
             return None,"联网过程出错。"
+    def UnwishCourse(self,acid,crid):
+        funcUrl="http://yunxiao.wffms.com/BaseInfos/WishPeriodCourse/UnwishGroup"
+        postdata = {
+            'Id': crid,
+            'ActId': acid,
+            'ax': 1,
+        }
+        wishheaders={
+            "Host": "yunxiao.wffms.com",
+            "Origin": "http://yunxiao.wffms.com",
+            "Referer": "http://yunxiao.wffms.com/BaseInfos/WishPeriodCourse/Optional?ax=1&ActId="+acid,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36 Edg/88.0.705.74",
+            "X-Requested-With": "XMLHttpRequest",
+        }
+        r = self.session.post(funcUrl, data=postdata,allow_redirects=False,headers=wishheaders)
+        #print(r.text)
+        if "errMsg" in r.text:
+            jo=J.loads(r.text)
+            return jo,jo["errMsg"]
+        else:
+            return jo,"退选成功。"
